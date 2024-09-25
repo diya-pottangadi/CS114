@@ -3,7 +3,7 @@ import java.io.FileNotFoundException;
 import java.util.Scanner;
 
 //Maze Project
-//September 26, 2024
+//Due September 26, 2024
 public class Main {
     
     private static int rows, columns;
@@ -11,15 +11,14 @@ public class Main {
     private static boolean solved;
 
     public static void main(String[] args)  {
-        fileRead();
-
-        if(solved==true){
-            System.out.println("The Maze has been solved!");
+        readFile();
+        if(solved==false){
+            System.out.println("The maze has no solution");  
         }
     }
 
-    //method to read the file
-    public static void fileRead(){
+    //method to read the file and call starting position
+    public static void readFile(){
 
         File mazeFile = new File("/Users/diyapottangadi/Desktop/mazeFile.txt");
         try (Scanner scan = new Scanner(mazeFile)) 
@@ -34,11 +33,11 @@ public class Main {
                 maze[i] = scan.nextLine().toCharArray();
             }
         
-            //finding starting position, calls mazeSolve method
+            //finding starting position, calls solveMaze method
             for(int r=0; r<rows; r++){
                 for(int c=0; c<columns; c++){
-                    if(maze[r][c] =='+'){
-                        mazeSolve(r,c); 
+                    if(maze[r][c] == '+'){
+                        solveMaze(r,c); 
                     }
                 }
             }  
@@ -48,23 +47,52 @@ public class Main {
     }
     
     //recursion
-    public static void mazeSolve(int x, int y){
-        /*
-          if (maze[r][c] == "-"){
-            solved == true;
+    public static void solveMaze(int r, int c){
+        
+        //checking bounds
+        if (r < 0 || c < 0 || r >= maze.length || c >= maze[0].length) {
+            return;        
         }
-         */
-        //condition to go up, down, left, right
-        //condition to check if ended
-        //condition to mark visited
-        //condition to check dead end
-       
+
+        //checking if the maze is solved
+        if (maze[r][c] == '-'){
+            solved=true;
+        }
+        
+        //checking if visited or wall
+        if(maze[r][c] == '#' || maze[r][c] == '+'){
+            return;
+        }
+
+        //marking maze
+        maze[r][c] = '+'; 
+
+        //recursive calls
+        solveMaze(r-1,c); 
+        solveMaze(r+1,c);
+        solveMaze(r,c-1);
+        solveMaze(r, c+1);
+        
+        if(!solved){
+            maze[r][c] = '.';
+        }
+
+        if(solved){
+            System.out.println("The maze was solved!");
+            printMaze();
+        }
+    
     }
 
-    
-
-    
-
+    public static void printMaze(){
+        for(int r=0; r<rows; r++)
+        {
+            for(int c=0; c<columns; c++)
+            {
+                System.out.print(maze[r][c]);
+            }
+        }
+    }
 
 }
 
