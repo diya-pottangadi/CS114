@@ -42,7 +42,6 @@ public class Main {
                 for(int c=0; c<columns; c++){
                     if(maze[r][c] == '+'){
                         solveMaze(r,c); 
-                        System.out.println(r + " " + c);
                         return;
                     }
                 }
